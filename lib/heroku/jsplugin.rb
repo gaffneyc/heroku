@@ -22,8 +22,7 @@ class Heroku::JSPlugin
         end
       end
       klass.send(:define_method, :run) do
-        ENV['HEROKU_APP'] = @opts[:app]
-        exec this.bin, "#{plugin['topic']}:#{plugin['command']}", *@args
+        this.run(plugin['topic'], plugin['command'], @opts[:app], @args)
       end
       Heroku::Command.register_command(
         :command   => plugin['command'] ? "#{plugin['topic']}:#{plugin['command']}" : plugin['topic'],
@@ -95,6 +94,12 @@ class Heroku::JSPlugin
       File.delete bin
       raise 'SHA mismatch for heroku-cli'
     end
+  end
+
+  def self.run(topic, command, app, args)
+    ENV['HEROKU_APP'] = app
+    cmd = command ? "#{topic}:#{command}" : topic
+    exec self.bin, cmd, *args
   end
 
   def self.arch

@@ -115,7 +115,7 @@ module Heroku::Command
 
     def ruby_plugin_install(name)
       action("Installing #{name}") do
-        plugin = Heroku::Plugin.new(name)
+        p.lugin = Heroku::Plugin.new(name)
         if plugin.install
           unless Heroku::Plugin.load_plugin(plugin.name)
             plugin.uninstall
